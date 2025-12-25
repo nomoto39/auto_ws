@@ -1,6 +1,8 @@
 build/
 install/
 log/
+**/Log/*.txt
+**/Log/*.log
 *.pyc
 __pycache__/
 .vscode/
