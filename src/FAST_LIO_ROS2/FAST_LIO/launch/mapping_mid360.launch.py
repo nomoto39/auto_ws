@@ -61,7 +61,7 @@ def generate_launch_description():
                     'filter_size_map': filter_size_map_param,
                     'cube_side_length': cube_side_length_param,
                     'runtime_pos_log_enable': runtime_pos_log_enable_param}],
-        output='screen'
+        # output='screen'
     )
     rviz_node = Node(
         package='rviz2',

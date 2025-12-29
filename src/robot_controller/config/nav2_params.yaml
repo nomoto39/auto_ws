@@ -1,10 +1,5 @@
-amcl:
-  ros__parameters:
-    use_sim_time: False
-
 bt_navigator:
   ros__parameters:
-    use_sim_time: False
     global_frame: map
     robot_base_frame: base_link
     odom_topic: /Odometry
@@ -47,7 +42,6 @@ bt_navigator:
 
 controller_server:
   ros__parameters:
-    use_sim_time: False
     controller_frequency: 20.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -111,9 +105,8 @@ local_costmap:
     ros__parameters:
       update_frequency: 5.0
       publish_frequency: 2.0
-      global_frame: camera_init
+      global_frame: odom
       robot_base_frame: base_link
-      use_sim_time: False
       rolling_window: true
       width: 5
       height: 5
@@ -129,6 +122,10 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
+          qos_overrides:
+            /scan:
+              reliability: best_effort
+              durability: volatile
           raytrace_max_range: 3.0
           obstacle_max_range: 2.5
           sensor_frame: "base_link"
@@ -145,7 +142,6 @@ global_costmap:
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
-      use_sim_time: False
       robot_radius: 0.2
       rolling_window: true
       width: 50
@@ -164,6 +160,10 @@ global_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
+          qos_overrides:
+            /scan:
+              reliability: best_effort
+              durability: volatile
           raytrace_max_range: 3.0
           obstacle_max_range: 2.5
           sensor_frame: "base_link"
@@ -175,7 +175,6 @@ global_costmap:
 
 planner_server:
   ros__parameters:
-    use_sim_time: False
     expected_planner_frequency: 20.0
     planner_plugins: ["GridBased"]
     GridBased:
@@ -199,7 +198,6 @@ recoveries_server:
 
 waypoint_follower:
   ros__parameters:
-    use_sim_time: False
     loop_rate: 20
     stop_on_failure: false
     waypoint_task_executor_plugin: "wait_at_waypoint"

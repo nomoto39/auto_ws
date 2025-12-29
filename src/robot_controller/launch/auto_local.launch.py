@@ -20,7 +20,8 @@ def generate_launch_description():
     livox_driver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('livox_ros_driver2'), 'launch_ROS2', 'rviz_MID360_launch.py')
-        )
+        ),
+        # launch_arguments={'rviz': 'false'}.items()
     )
 
     # --- 2. SLAM (Fast-LIO) ---
@@ -28,18 +29,19 @@ def generate_launch_description():
     fast_lio_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('fast_lio'), 'launch', 'mapping_mid360.launch.py')
-        )
+        ),
+        # launch_arguments={'rviz': 'false'}.items()
     )
     
-    # 1. map -> camera_init の静的TF（ロボット足元からlidarまでの座標変換）
+    # 1. map -> odom の静的TF（ロボット足元からlidarまでの座標変換）
     map_to_lidar_map_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
-        name='map_to_camera_init',
+        name='map_to_odom',
         arguments=[
             '--x', '0.0', '--y', '0.0', '--z', '0.0',
             '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
-            '--frame-id', 'map', '--child-frame-id', 'camera_init'
+            '--frame-id', 'map', '--child-frame-id', 'odom'
         ]
     )
 
@@ -56,6 +58,7 @@ def generate_launch_description():
     )
 
     # 3. base_link -> livox_frame の静的TF（ロボット足元からLiDARまでの座標変換）
+    # MID360を下向きに取り付けた場合: roll='3.14159'（180度回転）
     static_tf_base_link_to_livox = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -141,6 +144,12 @@ def generate_launch_description():
                                                 # 使用するコントローラーとボタンに合わせて値を設定
     )
 
+    # Nav2を5秒遅延起動
+    nav2_delayed_launch = TimerAction(
+        period=5.0,
+        actions=[nav2_launch]
+    )
+
     # --- LaunchDescriptionの構築 ---
     ld = LaunchDescription()
     ld.add_action(livox_driver_launch)
@@ -151,7 +160,7 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_params_file_cmd)
     ld.add_action(pointcloud_to_laserscan_node)
-    ld.add_action(nav2_launch)
+    ld.add_action(nav2_delayed_launch)
     ld.add_action(rviz_node)
     ld.add_action(ros_serial_node)
     return ld

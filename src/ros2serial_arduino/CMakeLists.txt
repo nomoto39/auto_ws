@@ -13,7 +13,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 ## set target
-set(NODES serial_receive_node;serial_send_node;tele_serial_send_node;;unified_serial_send_node)
+set(NODES serial_receive_node;serial_send_node;tele_serial_send_node)
 foreach(target IN LISTS NODES)
   add_executable(${target} src/${target}.cpp)
   ament_target_dependencies(${target} rclcpp std_msgs geometry_msgs sensor_msgs)
