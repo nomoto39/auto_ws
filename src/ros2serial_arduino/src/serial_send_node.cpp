@@ -83,7 +83,7 @@ private:
             buf[1] = '\n';
         }
 
-        bytes_written = snprintf(buf, sizeof(buf), "%7.3f,%7.3f\n", msg->linear.x, msg->linear.z);
+        bytes_written = snprintf(buf, sizeof(buf), "%7.3f,%7.3f\n", msg->linear.x, msg->angular.z);
         //bytes_written = snprintf(buf, sizeof(buf), "%7.3f,%7.3f\n", msg->linear.x, msg->angulrar.z);
         //bytes_written = snprintf(buf, sizeof(buf), "%7.3f,%7.3f,%7.3f,%7.3f\n", msg->linear.x, msg->linear.z, msg->angular.x, msg->angular.y);
 

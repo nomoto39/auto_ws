@@ -38,11 +38,10 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='map_to_odom',
-        arguments=[
-            '--x', '0.0', '--y', '0.0', '--z', '0.0',
-            '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
-            '--frame-id', 'map', '--child-frame-id', 'odom'
-        ]
+        arguments=['--x', '0.0', '--y', '0.0', '--z', '0.0',
+                   '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
+                   '--frame-id', 'map', '--child-frame-id', 'odom'],
+        output='screen'
     )
 
     # 2. body -> base_link の静的TF （lidarからロボット足元までの座標変換）
@@ -50,11 +49,10 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='body_to_base_link',
-        arguments=[
-            '--x', '0.0', '--y', '0.0', '--z', '0.0',
-            '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
-            '--frame-id', 'body', '--child-frame-id', 'base_link'
-        ]
+        arguments=['--x', '0.0', '--y', '0.0', '--z', '0.0',
+                   '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
+                   '--frame-id', 'body', '--child-frame-id', 'base_link'],
+        output='screen'
     )
 
     # 3. base_link -> livox_frame の静的TF（ロボット足元からLiDARまでの座標変換）
@@ -63,11 +61,10 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_tf_base_link_livox',
-        arguments=[
-            '--x', '0.0', '--y', '0.0', '--z', '0.0',
-            '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
-            '--frame-id', 'base_link', '--child-frame-id', 'livox_frame'
-        ]
+        arguments=['--x', '0.0', '--y', '0.0', '--z', '0.0',
+                   '--roll', '0.0', '--pitch', '0.0', '--yaw', '0.0',
+                   '--frame-id', 'base_link', '--child-frame-id', 'livox_frame'],
+        output='screen'
     )
 
     pkg_robot_controller = get_package_share_directory('robot_controller')
@@ -96,6 +93,7 @@ def generate_launch_description():
         name='pointcloud_to_laserscan',
         parameters=[{
             'target_frame': 'base_link',
+            'transform_tolerance': 0.1,
             'min_height': -0.2,
             'max_height': 1.0,
             'angle_min': -3.1415,
@@ -162,5 +160,5 @@ def generate_launch_description():
     ld.add_action(pointcloud_to_laserscan_node)
     ld.add_action(nav2_delayed_launch)
     ld.add_action(rviz_node)
-    ld.add_action(ros_serial_node)
+    # ld.add_action(ros_serial_node)
     return ld

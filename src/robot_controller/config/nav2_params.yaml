@@ -103,14 +103,15 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 10.0
+      publish_frequency: 5.0
       global_frame: odom
       robot_base_frame: base_link
       rolling_window: true
       width: 5
       height: 5
       resolution: 0.05
+      always_send_full_costmap: true
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -122,13 +123,8 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          qos_overrides:
-            /scan:
-              reliability: best_effort
-              durability: volatile
           raytrace_max_range: 3.0
           obstacle_max_range: 2.5
-          sensor_frame: "base_link"
           inf_is_valid: true
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -160,13 +156,8 @@ global_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          qos_overrides:
-            /scan:
-              reliability: best_effort
-              durability: volatile
           raytrace_max_range: 3.0
           obstacle_max_range: 2.5
-          sensor_frame: "base_link"
           inf_is_valid: true
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -205,3 +196,8 @@ waypoint_follower:
       plugin: "nav2_waypoint_follower::WaitAtWaypoint"
       enabled: True
       waypoint_pause_duration: 200
+
+lifecycle_manager:
+  ros__parameters:
+    autostart: true
+    node_names: ['controller_server', 'planner_server', 'recoveries_server', 'bt_navigator', 'waypoint_follower']
